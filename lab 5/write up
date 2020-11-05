@@ -1,0 +1,27 @@
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 3.11.8 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+cqlsh> CREATE KEYSPACE Student WITH replication = {'class':'SimpleStrategy','replication_factor':3};
+cqlsh> use Student;
+cqlsh:student> CREATE COLUMNFAMILY StudentInfo(Student_Id INT PRIMARY KEY, Student_Name VARCHAR, Date_of_Joining VARCHAR,Semester INT, Dept_Name VARCHAR);
+cqlsh:student> BEGIN BATCH INSERT INTO StudentInfo (Student_Id, Student_Name, Date_of_Joining, Semester, Dept_name) values(1 ,'Satyam','09/12/2020',7,'CSE');
+           ... INSERT INTO StudentInfo (Student_Id, Student_Name, Date_of_Joining, Semester, Dept_name) values(121 ,'Aman','19/12/2020',7,'ISE');
+           ... APPLY BATCH;
+cqlsh:student> SELECT * FROM StudentInfo;
+
+ student_id | date_of_joining | dept_name | semester | student_name
+------------+-----------------+-----------+----------+--------------
+          1 |      09/12/2020 |       CSE |        7 |       Satyam
+        121 |      19/12/2020 |       ISE |        7 |         Aman
+
+(2 rows)
+cqlsh:student> UPDATE Student.StudentInfo SET Student_Name='Ayush' WHERE Student_Id =121;
+cqlsh:student> SELECT * FROM StudentInfo;
+
+ student_id | date_of_joining | dept_name | semester | student_name
+------------+-----------------+-----------+----------+--------------
+          1 |      09/12/2020 |       CSE |        7 |       Satyam
+        121 |      19/12/2020 |       ISE |        7 |        Ayush
+
+(2 rows)
+cqlsh:student>
